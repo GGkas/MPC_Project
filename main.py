@@ -10,7 +10,7 @@ def main():
     env.process(cl_serv.client_agent('CL1', env, link))
     env.process(cl_serv.server_agent('SRV', env, link))
 
-    env.run(until=10000)
+    env.run(until=1000000)
 
 if __name__ == '__main__':
     main()

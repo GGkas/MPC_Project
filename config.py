@@ -2,7 +2,7 @@ import math
 import random
 
 # GLOBAL VARIABLES
-CACHE_SIZE = 64
+CACHE_SIZE = 2048
 M_COEFF = CACHE_SIZE >> 5
 MAX_PAGES_BCAST = 2*CACHE_SIZE + random.randint(1, 10)
 
@@ -26,7 +26,11 @@ def get_tail_size(o_queue, m_queue):
     queue_flag = 0 for once_accessed, 1 for multiply_accessed
 '''
 def calculate_emergency(queue_flag, distance, size_o, size_m):
-    emerg_1 = math.log(CACHE_SIZE/distance, M_COEFF)
+    if (distance == 0.0):
+        approx_distance = 0.0001
+        emerg_1 = math.log(CACHE_SIZE/approx_distance, M_COEFF)
+    else:
+        emerg_1 = math.log(CACHE_SIZE/distance, M_COEFF)
     if (~queue_flag):
         Q_param = size_m/size_o
     else:
@@ -57,13 +61,19 @@ def calculate_utility(page_emergency, queue_flag, hit_flag='hit'):
 
 def distance2tail(queue, page):
     size = len(queue)
-    return (size*(page.time_stamp-queue[-1].time_stamp)/(queue[0].time_stamp - queue[-1].time_stamp))
+    if (size == 1):
+        print("Distance from tail (for small queue) = {}".format(page.time_stamp-queue[-1].time_stamp))
+        return (page.time_stamp-queue[-1].time_stamp)
+    else:
+        print("Distance from tail (for bigger queue with size {}) = {}".format(size, size*(page.time_stamp-queue[-1].time_stamp)/(queue[0].time_stamp - queue[-1].time_stamp)))
+        return (size*(page.time_stamp-queue[-1].time_stamp)/(queue[0].time_stamp - queue[-1].time_stamp))
 
 class Page(object):
-    def __init__(self, time_stamp, id):
+    def __init__(self, id, time_stamp):
         self.time_stamp = time_stamp
         self.id = id
         self.accessed = 0
+        self.isDated = False
     
     def __repr__(self):
         return "id: {}, time_stamp: {}".format(self.id, self.time_stamp)
