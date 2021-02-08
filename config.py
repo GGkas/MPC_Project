@@ -2,7 +2,7 @@ import math
 import random
 
 # GLOBAL VARIABLES
-CACHE_SIZE = 2048
+CACHE_SIZE = 2048   # This is the only one that the user can change
 M_COEFF = CACHE_SIZE >> 5
 MAX_PAGES_BCAST = 2*CACHE_SIZE + random.randint(1, 10)
 
